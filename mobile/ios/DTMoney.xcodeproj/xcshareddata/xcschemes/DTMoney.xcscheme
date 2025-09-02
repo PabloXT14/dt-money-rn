@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "dtmoneyapp.app"
-               BlueprintName = "dtmoneyapp"
-               ReferencedContainer = "container:dtmoneyapp.xcodeproj">
+               BuildableName = "DTMoney.app"
+               BlueprintName = "DTMoney"
+               ReferencedContainer = "container:DTMoney.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "dtmoneyappTests.xctest"
-               BlueprintName = "dtmoneyappTests"
-               ReferencedContainer = "container:dtmoneyapp.xcodeproj">
+               BuildableName = "DTMoneyTests.xctest"
+               BlueprintName = "DTMoneyTests"
+               ReferencedContainer = "container:DTMoney.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "dtmoneyapp.app"
-            BlueprintName = "dtmoneyapp"
-            ReferencedContainer = "container:dtmoneyapp.xcodeproj">
+            BuildableName = "DTMoney.app"
+            BlueprintName = "DTMoney"
+            ReferencedContainer = "container:DTMoney.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "dtmoneyapp.app"
-            BlueprintName = "dtmoneyapp"
-            ReferencedContainer = "container:dtmoneyapp.xcodeproj">
+            BuildableName = "DTMoney.app"
+            BlueprintName = "DTMoney"
+            ReferencedContainer = "container:DTMoney.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
