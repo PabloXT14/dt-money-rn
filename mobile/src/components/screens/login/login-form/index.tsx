@@ -20,8 +20,18 @@ export const LoginForm = () => {
       <Input
         control={control}
         name="email"
-        label="Email"
+        label="EMAIL"
+        leftIconName="mail-outline"
         placeholder="Digite seu email"
+      />
+
+      <Input
+        control={control}
+        name="password"
+        label="SENHA"
+        leftIconName="lock-outline"
+        placeholder="Digite sua senha"
+        secureTextEntry
       />
     </View>
   )

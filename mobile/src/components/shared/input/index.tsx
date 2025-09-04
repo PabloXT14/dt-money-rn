@@ -1,3 +1,4 @@
+import { useRef, useState } from "react"
 import {
   Text,
   TextInput,
@@ -11,8 +12,10 @@ import {
   type FieldValues,
   type Path,
 } from "react-hook-form"
-import type { MaterialIcons } from "@expo/vector-icons"
+import { MaterialIcons } from "@expo/vector-icons"
+
 import { colors } from "@/shared/colors"
+import clsx from "clsx"
 
 type InputProps<T extends FieldValues> = TextInputProps & {
   control: Control<T>
@@ -28,20 +31,52 @@ export const Input = <T extends FieldValues>({
   label,
   ...rest
 }: InputProps<T>) => {
+  const [isFocused, setIsFocused] = useState(false)
+
+  const inputRef = useRef<TextInput>(null)
+
+  const checkFocus = () => {
+    if (inputRef.current) {
+      setIsFocused(inputRef.current.isFocused())
+    }
+  }
+
   return (
     <Controller
       control={control}
       name={name}
       render={({ field: { onChange, value } }) => (
-        <View className="w-full">
-          {label && <Text className="text-white uppercase">{label}</Text>}
+        <View className="mt-4 w-full">
+          {label && (
+            <Text
+              className={clsx(
+                "mt-3 mb-2 font-medium text-xs",
+                isFocused ? "text-accent-brand" : "text-gray-600"
+              )}
+            >
+              {label}
+            </Text>
+          )}
 
           <TouchableOpacity className="h-16 flex-row items-center justify-between border-gray-600 border-b px-3 py-2">
+            {leftIconName && (
+              <MaterialIcons
+                name={leftIconName}
+                size={24}
+                color={isFocused ? colors["accent-brand"] : colors.gray[600]}
+                className="mr-2"
+              />
+            )}
+
             <TextInput
+              ref={inputRef}
+              onFocus={checkFocus}
+              onEndEditing={checkFocus}
               value={value}
               onChangeText={onChange}
-              {...rest}
               placeholderTextColor={colors.gray[700]}
+              className="flex-1 text-base text-gray-500"
+              {...rest}
             />
           </TouchableOpacity>
         </View>
