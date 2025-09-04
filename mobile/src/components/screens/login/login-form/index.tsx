@@ -1,5 +1,7 @@
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import { useForm } from "react-hook-form"
+
+import { Input } from "@/components/shared/input"
 
 export type LoginFormData = {
   email: string
@@ -15,7 +17,12 @@ export const LoginForm = () => {
 
   return (
     <View>
-      <Text className="font-bold text-white text-xl">Login Form</Text>
+      <Input
+        control={control}
+        name="email"
+        label="Email"
+        placeholder="Digite seu email"
+      />
     </View>
   )
 }
