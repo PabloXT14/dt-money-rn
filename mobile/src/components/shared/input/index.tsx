@@ -13,9 +13,9 @@ import {
   type Path,
 } from "react-hook-form"
 import { MaterialIcons } from "@expo/vector-icons"
+import clsx from "clsx"
 
 import { colors } from "@/shared/colors"
-import clsx from "clsx"
 
 type InputProps<T extends FieldValues> = TextInputProps & {
   control: Control<T>
@@ -27,11 +27,13 @@ type InputProps<T extends FieldValues> = TextInputProps & {
 export const Input = <T extends FieldValues>({
   control,
   name,
-  leftIconName,
   label,
+  leftIconName,
+  secureTextEntry,
   ...rest
 }: InputProps<T>) => {
   const [isFocused, setIsFocused] = useState(false)
+  const [showText, setShowText] = useState(secureTextEntry)
 
   const inputRef = useRef<TextInput>(null)
 
@@ -39,6 +41,10 @@ export const Input = <T extends FieldValues>({
     if (inputRef.current) {
       setIsFocused(inputRef.current.isFocused())
     }
+  }
+
+  const handleToggleTextVisibility = () => {
+    setShowText((prevState) => !prevState)
   }
 
   return (
@@ -76,8 +82,20 @@ export const Input = <T extends FieldValues>({
               onChangeText={onChange}
               placeholderTextColor={colors.gray[700]}
               className="flex-1 text-base text-gray-500"
+              secureTextEntry={showText}
               {...rest}
             />
+
+            {secureTextEntry && (
+              <TouchableOpacity onPress={handleToggleTextVisibility}>
+                <MaterialIcons
+                  name={showText ? "visibility" : "visibility-off"}
+                  size={24}
+                  color={colors.gray[600]}
+                  className="ml-2"
+                />
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         </View>
       )}
