@@ -1,7 +1,8 @@
-import { View } from "react-native"
+import { Text, View } from "react-native"
 import { useForm } from "react-hook-form"
 
 import { Input } from "@/components/shared/input"
+import { Button } from "@/components/shared/button"
 
 export type LoginFormData = {
   email: string
@@ -33,6 +34,22 @@ export const LoginForm = () => {
         placeholder="Digite sua senha"
         secureTextEntry
       />
+
+      <View className="mt-8 mb-6 min-h-[250px] flex-1 justify-between">
+        <Button iconName="arrow-forward" onPress={handleSubmit(() => {})}>
+          Logar
+        </Button>
+
+        <View className="gap-6">
+          <Text className="text-base text-gray-300">
+            Ainda não tem uma conta?
+          </Text>
+
+          <Button iconName="arrow-forward" mode="outline">
+            Cadastrar
+          </Button>
+        </View>
+      </View>
     </View>
   )
 }
