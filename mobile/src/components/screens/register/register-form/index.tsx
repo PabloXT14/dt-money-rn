@@ -1,26 +1,57 @@
 import { Text, View } from "react-native"
+import { router } from "expo-router"
 import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
-import { router } from "expo-router"
 
-export type RegisterFormData = {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-}
+const MIN_PASSWORD_LENGTH = 6
+
+const RegisterFormSchema = z
+  .object({
+    name: z.string().nonempty({ error: "O nome é obrigatório" }),
+    email: z
+      .email({ error: "Email inválido" })
+      .nonempty({ error: "O email é obrigatório" }),
+    password: z
+      .string()
+      .min(MIN_PASSWORD_LENGTH, {
+        error: "A senha deve ter no mínimo 6 caracteres",
+      })
+      .nonempty({ error: "A senha é obrigatória" }),
+    confirmPassword: z
+      .string()
+      .min(MIN_PASSWORD_LENGTH, {
+        error: "A confirmação de senha deve ter no mínimo 6 caracteres",
+      })
+      .nonempty({ error: "A confirmação de senha é obrigatória" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    error: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  })
+
+export type RegisterFormData = z.infer<typeof RegisterFormSchema>
 
 export const RegisterForm = () => {
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<RegisterFormData>()
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterFormSchema),
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+  })
+
+  const onSubmit = (data: RegisterFormData) => {
+    // biome-ignore lint/suspicious/noConsole: debugging
+    console.log(data)
+  }
 
   return (
-    <>
+    <View>
       <Input
         control={control}
         name="name"
@@ -56,7 +87,7 @@ export const RegisterForm = () => {
       />
 
       <View className="mt-8 mb-6 min-h-[250px] flex-1 justify-between">
-        <Button iconName="arrow-forward" onPress={handleSubmit(() => {})}>
+        <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
           Cadastrar
         </Button>
 
@@ -72,6 +103,6 @@ export const RegisterForm = () => {
           </Button>
         </View>
       </View>
-    </>
+    </View>
   )
 }

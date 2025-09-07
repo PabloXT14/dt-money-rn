@@ -51,7 +51,7 @@ export const Input = <T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange, value } }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <View className="mt-4 w-full">
           {label && (
             <Text
@@ -97,6 +97,10 @@ export const Input = <T extends FieldValues>({
               </TouchableOpacity>
             )}
           </TouchableOpacity>
+
+          {error && (
+            <Text className="mt-1 text-red-500 text-sm">{error.message}</Text>
+          )}
         </View>
       )}
     />

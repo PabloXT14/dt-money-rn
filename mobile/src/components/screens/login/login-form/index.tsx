@@ -1,21 +1,42 @@
 import { Text, View } from "react-native"
+import { router } from "expo-router"
 import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
-import { router } from "expo-router"
 
-export type LoginFormData = {
-  email: string
-  password: string
-}
+const MIN_PASSWORD_LENGTH = 6
+
+const LoginFormSchema = z.object({
+  email: z
+    .email({ error: "Email inválido" })
+    .nonempty({ error: "O email é obrigatório" }),
+  password: z
+    .string()
+    .min(MIN_PASSWORD_LENGTH, {
+      error: "A senha deve ter no mínimo 6 caracteres",
+    })
+    .nonempty({ error: "A senha é obrigatória" }),
+})
+
+export type LoginFormData = z.infer<typeof LoginFormSchema>
 
 export const LoginForm = () => {
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<LoginFormData>()
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginFormSchema),
+    defaultValues: { email: "", password: "" },
+  })
+
+  const onSubmit = (data: LoginFormData) => {
+    // biome-ignore lint/suspicious/noConsole: debugging
+    console.log(data)
+  }
 
   return (
     <View>
@@ -37,7 +58,7 @@ export const LoginForm = () => {
       />
 
       <View className="mt-8 mb-6 min-h-[250px] flex-1 justify-between">
-        <Button iconName="arrow-forward" onPress={handleSubmit(() => {})}>
+        <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
           Logar
         </Button>
 
