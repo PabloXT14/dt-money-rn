@@ -17,6 +17,8 @@ import clsx from "clsx"
 
 import { colors } from "@/shared/colors"
 
+import { ErrorMessage } from "../error-message"
+
 type InputProps<T extends FieldValues> = TextInputProps & {
   control: Control<T>
   name: Path<T>
@@ -98,9 +100,7 @@ export const Input = <T extends FieldValues>({
             )}
           </TouchableOpacity>
 
-          {error && (
-            <Text className="mt-1 text-red-500 text-sm">{error.message}</Text>
-          )}
+          {error && <ErrorMessage>{error.message}</ErrorMessage>}
         </View>
       )}
     />
