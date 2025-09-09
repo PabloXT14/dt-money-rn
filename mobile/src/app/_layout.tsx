@@ -4,11 +4,13 @@ import { StatusBar } from "expo-status-bar"
 
 import "@/styles/global.css"
 
+import { AuthContextProvider } from "@/contexts/auth.context"
+
 export default function RootLayout() {
   const [user, setUser] = useState(null)
 
   return (
-    <>
+    <AuthContextProvider>
       <StatusBar style="light" />
 
       <Stack
@@ -25,6 +27,6 @@ export default function RootLayout() {
           <Stack.Screen name="(public)" />
         </Stack.Protected>
       </Stack>
-    </>
+    </AuthContextProvider>
   )
 }
