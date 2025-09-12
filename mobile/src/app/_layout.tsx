@@ -1,32 +1,38 @@
-import { useState } from "react"
 import { Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import "@/styles/global.css"
 
-import { AuthContextProvider } from "@/contexts/auth.context"
+import { AuthContextProvider, useAuthContext } from "@/contexts/auth.context"
 
 export default function RootLayout() {
-  const [user, setUser] = useState(null)
-
   return (
     <AuthContextProvider>
       <StatusBar style="light" />
-
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right",
-        }}
-      >
-        <Stack.Protected guard={!!user}>
-          <Stack.Screen name="(private)" />
-        </Stack.Protected>
-
-        <Stack.Protected guard={!user}>
-          <Stack.Screen name="(public)" />
-        </Stack.Protected>
-      </Stack>
+      <RootNavigator />
     </AuthContextProvider>
+  )
+}
+
+function RootNavigator() {
+  const { user, token } = useAuthContext()
+
+  const isAuthenticated = !!user && !!token
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    >
+      <Stack.Protected guard={isAuthenticated}>
+        <Stack.Screen name="(private)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isAuthenticated}>
+        <Stack.Screen name="(public)" />
+      </Stack.Protected>
+    </Stack>
   )
 }

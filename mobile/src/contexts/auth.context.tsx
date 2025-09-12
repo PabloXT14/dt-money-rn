@@ -31,9 +31,6 @@ export const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     // biome-ignore lint/nursery/noShadow: disabled for clarity
     const { user, token } = await authService.login(params)
 
-    // biome-ignore lint/suspicious/noConsole: debugging
-    console.log({ user, token })
-
     setUser(user)
     setToken(token)
   }
