@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { Alert, Text, View } from "react-native"
 import { router } from "expo-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -6,6 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
+
+import { useAuthContext } from "@/contexts/auth.context"
+import { AxiosError } from "axios"
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -33,9 +36,22 @@ export const LoginForm = () => {
     defaultValues: { email: "", password: "" },
   })
 
-  const onSubmit = (data: LoginFormData) => {
-    // biome-ignore lint/suspicious/noConsole: debugging
-    console.log(data)
+  const { handleLogin } = useAuthContext()
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await handleLogin(data)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // biome-ignore lint/suspicious/noConsole: debugging
+        console.log(error.response?.data)
+      }
+
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro ao fazer login. Verifique suas credenciais e tente novamente."
+      )
+    }
   }
 
   return (
