@@ -35,7 +35,13 @@ export const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     setToken(token)
   }
 
-  const handleRegister = async (params: RegisterFormData) => {}
+  const handleRegister = async (params: RegisterFormData) => {
+    // biome-ignore lint/nursery/noShadow: disabled for clarity
+    const { user, token } = await authService.register(params)
+
+    setUser(user)
+    setToken(token)
+  }
 
   const handleLogout = () => {}
 

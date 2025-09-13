@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { Alert, Text, View } from "react-native"
 import { router } from "expo-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -6,6 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
+
+import { useAuthContext } from "@/contexts/auth.context"
+import { AxiosError } from "axios"
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -45,9 +48,22 @@ export const RegisterForm = () => {
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   })
 
-  const onSubmit = (data: RegisterFormData) => {
-    // biome-ignore lint/suspicious/noConsole: debugging
-    console.log(data)
+  const { handleRegister } = useAuthContext()
+
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await handleRegister(data)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        // biome-ignore lint/suspicious/noConsole: debugging
+        console.log(error.response?.data)
+      }
+
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro ao fazer o cadastro. Verifique seus dados e tente novamente."
+      )
+    }
   }
 
   return (
