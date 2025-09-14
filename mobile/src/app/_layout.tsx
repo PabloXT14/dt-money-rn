@@ -1,9 +1,12 @@
+import { useEffect, useState } from "react"
 import { Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import "@/styles/global.css"
 
 import { AuthContextProvider, useAuthContext } from "@/contexts/auth.context"
+
+import Loading from "@/components/shared/loading"
 
 export default function RootLayout() {
   return (
@@ -15,9 +18,36 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { user, token } = useAuthContext()
+  const [loading, setLoading] = useState(true)
+  const { user, token, restoreUserSession, handleLogout } = useAuthContext()
 
   const isAuthenticated = !!user && !!token
+
+  useEffect(() => {
+    const checkUserSession = async () => {
+      try {
+        const { user: restoredUser, token: restoredToken } =
+          await restoreUserSession()
+
+        if (!(restoredUser || restoredToken)) {
+          await handleLogout()
+        }
+      } catch (error) {
+        // biome-ignore lint/suspicious/noConsole: debugging
+        console.log(error)
+
+        await handleLogout()
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkUserSession()
+  }, [])
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <Stack
