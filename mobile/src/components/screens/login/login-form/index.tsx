@@ -8,7 +8,8 @@ import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
 
 import { useAuthContext } from "@/contexts/auth.context"
-import { AxiosError } from "axios"
+
+import { AppError } from "@/shared/helpers/app-error"
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -42,9 +43,9 @@ export const LoginForm = () => {
     try {
       await handleLogin(data)
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (error instanceof AppError) {
         // biome-ignore lint/suspicious/noConsole: debugging
-        console.log(error.response?.data)
+        console.log(error.message)
       }
 
       Alert.alert(
