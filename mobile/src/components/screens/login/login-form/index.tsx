@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native"
+import { Text, View } from "react-native"
 import { router } from "expo-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -8,6 +8,7 @@ import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
 
 import { useAuthContext } from "@/contexts/auth.context"
+import { useSnackbarContext } from "@/contexts/snackbar.context"
 
 import { AppError } from "@/shared/helpers/app-error"
 
@@ -38,20 +39,21 @@ export const LoginForm = () => {
   })
 
   const { handleLogin } = useAuthContext()
+  const { notify } = useSnackbarContext()
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await handleLogin(data)
     } catch (error) {
-      if (error instanceof AppError) {
-        // biome-ignore lint/suspicious/noConsole: debugging
-        console.log(error.message)
-      }
+      // biome-ignore lint/suspicious/noConsole: debugging
+      console.log(error)
 
-      Alert.alert(
-        "Erro",
-        "Ocorreu um erro ao fazer login. Verifique suas credenciais e tente novamente."
-      )
+      if (error instanceof AppError) {
+        notify({
+          message: error.message,
+          type: "ERROR",
+        })
+      }
     }
   }
 
