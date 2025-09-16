@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { ActivityIndicator, Text, View } from "react-native"
 import { router } from "expo-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -8,9 +8,9 @@ import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
 
 import { useAuthContext } from "@/contexts/auth.context"
-import { useSnackbarContext } from "@/contexts/snackbar.context"
+import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 
-import { AppError } from "@/shared/helpers/app-error"
+import { colors } from "@/shared/colors"
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -39,21 +39,13 @@ export const LoginForm = () => {
   })
 
   const { handleLogin } = useAuthContext()
-  const { notify } = useSnackbarContext()
+  const { handleError } = useErrorHandler()
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await handleLogin(data)
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: debugging
-      console.log(error)
-
-      if (error instanceof AppError) {
-        notify({
-          message: error.message,
-          type: "ERROR",
-        })
-      }
+      handleError(error, "Não foi possível fazer login.")
     }
   }
 
@@ -78,7 +70,7 @@ export const LoginForm = () => {
 
       <View className="mt-8 mb-6 min-h-[250px] flex-1 justify-between">
         <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
-          Logar
+          {isSubmitting ? <ActivityIndicator color={colors.white} /> : "Logar"}
         </Button>
 
         <View className="gap-6">

@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native"
+import { ActivityIndicator, Text, View } from "react-native"
 import { router } from "expo-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -8,7 +8,9 @@ import { Input } from "@/components/shared/input"
 import { Button } from "@/components/shared/button"
 
 import { useAuthContext } from "@/contexts/auth.context"
-import { AxiosError } from "axios"
+import { useErrorHandler } from "@/shared/hooks/user-error-handler"
+
+import { colors } from "@/shared/colors"
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -49,20 +51,13 @@ export const RegisterForm = () => {
   })
 
   const { handleRegister } = useAuthContext()
+  const { handleError } = useErrorHandler()
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await handleRegister(data)
     } catch (error) {
-      if (error instanceof AxiosError) {
-        // biome-ignore lint/suspicious/noConsole: debugging
-        console.log(error.response?.data)
-      }
-
-      Alert.alert(
-        "Erro",
-        "Ocorreu um erro ao fazer o cadastro. Verifique seus dados e tente novamente."
-      )
+      handleError(error, "Não foi possível fazer o cadastro.")
     }
   }
 
@@ -104,7 +99,11 @@ export const RegisterForm = () => {
 
       <View className="mt-8 mb-6 min-h-[250px] flex-1 justify-between">
         <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
-          Cadastrar
+          {isSubmitting ? (
+            <ActivityIndicator color={colors.white} />
+          ) : (
+            "Cadastrar"
+          )}
         </Button>
 
         <View className="gap-6">
