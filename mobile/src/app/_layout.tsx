@@ -6,14 +6,17 @@ import "@/styles/global.css"
 
 import { AuthContextProvider, useAuthContext } from "@/contexts/auth.context"
 
-import Loading from "@/components/shared/loading"
+import { Loading } from "@/components/shared/loading"
+import { SnackbarContextProvider } from "@/contexts/snackbar.context"
 
 export default function RootLayout() {
   return (
-    <AuthContextProvider>
-      <StatusBar style="light" />
-      <RootNavigator />
-    </AuthContextProvider>
+    <SnackbarContextProvider>
+      <AuthContextProvider>
+        <StatusBar style="light" />
+        <RootNavigator />
+      </AuthContextProvider>
+    </SnackbarContextProvider>
   )
 }
 

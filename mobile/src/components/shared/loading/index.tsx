@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 
 import { colors } from "@/shared/colors"
 
-export default function Loading() {
+export const Loading = () => {
   return (
     <SafeAreaView className="flex-1 items-center justify-center gap-20 bg-background-primary">
       <Image
