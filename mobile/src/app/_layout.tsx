@@ -14,7 +14,7 @@ import { Snackbar } from "@/components/shared/snackbar"
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView className="flex-1">
       <SnackbarContextProvider>
         <AuthContextProvider>
           <BottomSheetContextProvider>
