@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import { Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 import "@/styles/global.css"
 
 import { AuthContextProvider, useAuthContext } from "@/contexts/auth.context"
+import { BottomSheetContextProvider } from "@/contexts/bottomsheet.context"
 
 import { Loading } from "@/components/shared/loading"
 import { SnackbarContextProvider } from "@/contexts/snackbar.context"
@@ -12,13 +14,17 @@ import { Snackbar } from "@/components/shared/snackbar"
 
 export default function RootLayout() {
   return (
-    <SnackbarContextProvider>
-      <AuthContextProvider>
-        <StatusBar style="light" />
-        <RootNavigator />
-        <Snackbar />
-      </AuthContextProvider>
-    </SnackbarContextProvider>
+    <GestureHandlerRootView>
+      <SnackbarContextProvider>
+        <AuthContextProvider>
+          <BottomSheetContextProvider>
+            <StatusBar style="light" />
+            <RootNavigator />
+            <Snackbar />
+          </BottomSheetContextProvider>
+        </AuthContextProvider>
+      </SnackbarContextProvider>
+    </GestureHandlerRootView>
   )
 }
 
