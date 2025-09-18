@@ -6,6 +6,8 @@ import { colors } from "@/shared/colors"
 import { useAuthContext } from "@/contexts/auth.context"
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 
+import { NewTransactionForm } from "../new-transaction-form"
+
 export const Header = () => {
   const { handleLogout } = useAuthContext()
   const { openBottomSheet } = useBottomSheetContext()
@@ -31,14 +33,7 @@ export const Header = () => {
 
       <TouchableOpacity
         onPress={() => {
-          openBottomSheet(
-            <View className="flex-1 p-4">
-              <Text className="font-bold text-lg text-white">
-                Formulário de nova transação
-              </Text>
-            </View>,
-            0
-          )
+          openBottomSheet(<NewTransactionForm />, 0)
         }}
         className="h-[40px] w-[140px] items-center justify-center rounded-md bg-accent-brand"
       >
