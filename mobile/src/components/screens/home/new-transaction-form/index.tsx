@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
+import CurrencyInput from "react-native-currency-input"
 
 import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
 
@@ -17,6 +19,13 @@ export const NewTransactionForm = () => {
     description: "",
     value: 0,
   })
+
+  const setTransactionData = (
+    key: keyof ICreateTransactionRequest,
+    value: string | number
+  ) => {
+    setTransaction((prevState) => ({ ...prevState, [key]: value }))
+  }
 
   return (
     <View className="p-6">
@@ -35,6 +44,29 @@ export const NewTransactionForm = () => {
       </View>
 
       {/* FORM */}
+      <View className="mt-6 gap-3">
+        <BottomSheetTextInput
+          placeholder="Descrição"
+          value={transaction.description}
+          onChangeText={(text) => setTransactionData("description", text)}
+          className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
+          placeholderTextColor={colors.gray[700]}
+        />
+
+        <CurrencyInput
+          // prefix="R$ "
+          delimiter="."
+          separator=","
+          precision={2}
+          minValue={0}
+          value={transaction.value}
+          onChangeValue={(text) => setTransactionData("value", Number(text))}
+          placeholder="Preço"
+          placeholderTextColor={colors.gray[700]}
+          className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
+          renderTextInput={(props) => <BottomSheetTextInput {...props} />}
+        />
+      </View>
     </View>
   )
 }
