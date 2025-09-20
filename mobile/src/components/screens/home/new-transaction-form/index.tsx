@@ -10,6 +10,8 @@ import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 
 import { colors } from "@/shared/colors"
 
+import { TransactionTypeSelector } from "@/components/shared/transaction-type-selector"
+
 export const NewTransactionForm = () => {
   const { closeBottomSheet } = useBottomSheetContext()
 
@@ -65,6 +67,14 @@ export const NewTransactionForm = () => {
           placeholderTextColor={colors.gray[700]}
           className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
           renderTextInput={(props) => <BottomSheetTextInput {...props} />}
+        />
+      </View>
+
+      {/* TYPE OPTIONS */}
+      <View className="mt-6 w-full">
+        <TransactionTypeSelector
+          typeId={transaction.typedId}
+          setTransactionType={(typeId) => setTransactionData("typedId", typeId)}
         />
       </View>
     </View>
