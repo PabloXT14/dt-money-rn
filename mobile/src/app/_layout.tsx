@@ -7,6 +7,7 @@ import "@/styles/global.css"
 
 import { AuthContextProvider, useAuthContext } from "@/contexts/auth.context"
 import { BottomSheetContextProvider } from "@/contexts/bottomsheet.context"
+import { TransactionContextProvider } from "@/contexts/transaction.context"
 
 import { Loading } from "@/components/shared/loading"
 import { SnackbarContextProvider } from "@/contexts/snackbar.context"
@@ -17,11 +18,13 @@ export default function RootLayout() {
     <GestureHandlerRootView className="flex-1">
       <SnackbarContextProvider>
         <AuthContextProvider>
-          <BottomSheetContextProvider>
-            <StatusBar style="light" />
-            <RootNavigator />
-            <Snackbar />
-          </BottomSheetContextProvider>
+          <TransactionContextProvider>
+            <BottomSheetContextProvider>
+              <StatusBar style="light" />
+              <RootNavigator />
+              <Snackbar />
+            </BottomSheetContextProvider>
+          </TransactionContextProvider>
         </AuthContextProvider>
       </SnackbarContextProvider>
     </GestureHandlerRootView>
