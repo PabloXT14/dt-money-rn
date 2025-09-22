@@ -11,6 +11,7 @@ import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 import { colors } from "@/shared/colors"
 
 import { TransactionTypeSelector } from "@/components/shared/transaction-type-selector"
+import { SelectCategoryModal } from "@/components/shared/select-category-modal"
 
 export const NewTransactionForm = () => {
   const { closeBottomSheet } = useBottomSheetContext()
@@ -67,6 +68,13 @@ export const NewTransactionForm = () => {
           placeholderTextColor={colors.gray[700]}
           className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
           renderTextInput={(props) => <BottomSheetTextInput {...props} />}
+        />
+
+        <SelectCategoryModal
+          selectedCategory={transaction.categoryId}
+          onSelectCategory={(categoryId) =>
+            setTransactionData("categoryId", categoryId)
+          }
         />
       </View>
 

@@ -28,9 +28,6 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     setCategories(fetchedCategories)
   }
 
-  // biome-ignore lint/suspicious/noConsole: debugging
-  console.log(categories)
-
   return (
     <TransactionContext.Provider
       value={{
