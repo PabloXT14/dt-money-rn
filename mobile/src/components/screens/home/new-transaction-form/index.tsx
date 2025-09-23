@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import CurrencyInput from "react-native-currency-input"
+import { ZodError } from "zod"
 
 import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
 
@@ -12,6 +13,11 @@ import { colors } from "@/shared/colors"
 
 import { TransactionTypeSelector } from "@/components/shared/transaction-type-selector"
 import { SelectCategoryModal } from "@/components/shared/select-category-modal"
+import { Button } from "@/components/shared/button"
+
+import { newTransactionFormSchema } from "./schema"
+
+type ValidationErrorsType = Record<keyof ICreateTransactionRequest, string>
 
 export const NewTransactionForm = () => {
   const { closeBottomSheet } = useBottomSheetContext()
@@ -22,6 +28,25 @@ export const NewTransactionForm = () => {
     description: "",
     value: 0,
   })
+  const [validationErrors, setValidationErrors] =
+    useState<ValidationErrorsType>()
+
+  const handleCreateNewTransaction = async () => {
+    try {
+      await newTransactionFormSchema.parse(transaction)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const errors = {} as ValidationErrorsType
+
+        for (const issue of error.issues) {
+          errors[issue.path[0] as keyof ICreateTransactionRequest] =
+            issue.message
+        }
+
+        setValidationErrors(errors)
+      }
+    }
+  }
 
   const setTransactionData = (
     key: keyof ICreateTransactionRequest,
@@ -29,6 +54,9 @@ export const NewTransactionForm = () => {
   ) => {
     setTransaction((prevState) => ({ ...prevState, [key]: value }))
   }
+
+  // biome-ignore lint/suspicious/noConsole: debug
+  console.log(validationErrors)
 
   return (
     <View className="p-6">
@@ -85,6 +113,11 @@ export const NewTransactionForm = () => {
           setTransactionType={(typeId) => setTransactionData("typedId", typeId)}
         />
       </View>
+
+      {/* CREATE BUTTON */}
+      <Button onPress={handleCreateNewTransaction} className="mt-10">
+        Cadastrar
+      </Button>
     </View>
   )
 }
