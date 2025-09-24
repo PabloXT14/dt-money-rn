@@ -14,6 +14,7 @@ import { colors } from "@/shared/colors"
 import { TransactionTypeSelector } from "@/components/shared/transaction-type-selector"
 import { SelectCategoryModal } from "@/components/shared/select-category-modal"
 import { Button } from "@/components/shared/button"
+import { ErrorMessage } from "@/components/shared/error-message"
 
 import { newTransactionFormSchema } from "./schema"
 
@@ -55,9 +56,6 @@ export const NewTransactionForm = () => {
     setTransaction((prevState) => ({ ...prevState, [key]: value }))
   }
 
-  // biome-ignore lint/suspicious/noConsole: debug
-  console.log(validationErrors)
-
   return (
     <View className="p-6">
       {/* HEADER */}
@@ -76,34 +74,52 @@ export const NewTransactionForm = () => {
 
       {/* FORM */}
       <View className="mt-6 gap-3">
-        <BottomSheetTextInput
-          placeholder="Descrição"
-          value={transaction.description}
-          onChangeText={(text) => setTransactionData("description", text)}
-          className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
-          placeholderTextColor={colors.gray[700]}
-        />
+        <View>
+          <BottomSheetTextInput
+            placeholder="Descrição"
+            value={transaction.description}
+            onChangeText={(text) => setTransactionData("description", text)}
+            className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
+            placeholderTextColor={colors.gray[700]}
+          />
 
-        <CurrencyInput
-          // prefix="R$ "
-          delimiter="."
-          separator=","
-          precision={2}
-          minValue={0}
-          value={transaction.value}
-          onChangeValue={(text) => setTransactionData("value", Number(text))}
-          placeholder="Preço"
-          placeholderTextColor={colors.gray[700]}
-          className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
-          renderTextInput={(props) => <BottomSheetTextInput {...props} />}
-        />
+          {validationErrors?.description && (
+            <ErrorMessage>{validationErrors.description}</ErrorMessage>
+          )}
+        </View>
 
-        <SelectCategoryModal
-          selectedCategory={transaction.categoryId}
-          onSelectCategory={(categoryId) =>
-            setTransactionData("categoryId", categoryId)
-          }
-        />
+        <View>
+          <CurrencyInput
+            // prefix="R$ "
+            delimiter="."
+            separator=","
+            precision={2}
+            minValue={0}
+            value={transaction.value}
+            onChangeValue={(text) => setTransactionData("value", Number(text))}
+            placeholder="Preço"
+            placeholderTextColor={colors.gray[700]}
+            className="h-14 w-full rounded-lg bg-background-primary px-4 text-base text-white"
+            renderTextInput={(props) => <BottomSheetTextInput {...props} />}
+          />
+
+          {validationErrors?.value && (
+            <ErrorMessage>{validationErrors.value}</ErrorMessage>
+          )}
+        </View>
+
+        <View>
+          <SelectCategoryModal
+            selectedCategory={transaction.categoryId}
+            onSelectCategory={(categoryId) =>
+              setTransactionData("categoryId", categoryId)
+            }
+          />
+
+          {validationErrors?.categoryId && (
+            <ErrorMessage>{validationErrors.categoryId}</ErrorMessage>
+          )}
+        </View>
       </View>
 
       {/* TYPE OPTIONS */}
@@ -112,6 +128,10 @@ export const NewTransactionForm = () => {
           typeId={transaction.typedId}
           setTransactionType={(typeId) => setTransactionData("typedId", typeId)}
         />
+
+        {validationErrors?.typedId && (
+          <ErrorMessage>{validationErrors.typedId}</ErrorMessage>
+        )}
       </View>
 
       {/* CREATE BUTTON */}
