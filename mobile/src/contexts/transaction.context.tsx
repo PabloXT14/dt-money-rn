@@ -6,12 +6,15 @@ import {
 } from "react"
 
 import type { ITransactionCategoryResponse } from "@/shared/interfaces/https/transaction-category-response"
+import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
 
-import { getTransactionCategories } from "@/shared/services/dt-money/transaction.service"
+// biome-ignore lint/performance/noNamespaceImport: disabled for clarity
+import * as transactionService from "@/shared/services/dt-money/transaction.service"
 
 export type TransactionContextType = {
   categories: ITransactionCategoryResponse[]
   fetchCategories: () => Promise<void>
+  createTransaction: (data: ICreateTransactionRequest) => Promise<void>
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -24,8 +27,13 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   )
 
   const fetchCategories = async () => {
-    const fetchedCategories = await getTransactionCategories()
+    const fetchedCategories =
+      await transactionService.getTransactionCategories()
     setCategories(fetchedCategories)
+  }
+
+  const createTransaction = async (data: ICreateTransactionRequest) => {
+    await transactionService.createTransaction(data)
   }
 
   return (
@@ -33,6 +41,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
       value={{
         categories,
         fetchCategories,
+        createTransaction,
       }}
     >
       {children}

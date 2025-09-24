@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/nursery/useConsistentTypeDefinitions: disabled */
 export interface ICreateTransactionRequest {
   description: string
-  typedId: number
+  typeId: number
   categoryId: number
   value: number
 }

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import CurrencyInput from "react-native-currency-input"
@@ -8,6 +8,8 @@ import { ZodError } from "zod"
 import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
 
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
+import { useTransactionContext } from "@/contexts/transaction.context"
+import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 
 import { colors } from "@/shared/colors"
 
@@ -22,21 +24,33 @@ type ValidationErrorsType = Record<keyof ICreateTransactionRequest, string>
 
 export const NewTransactionForm = () => {
   const { closeBottomSheet } = useBottomSheetContext()
+  const { createTransaction } = useTransactionContext()
+  const { handleError } = useErrorHandler()
 
   const [transaction, setTransaction] = useState<ICreateTransactionRequest>({
     categoryId: 0,
-    typedId: 0,
+    typeId: 0,
     description: "",
     value: 0,
   })
   const [validationErrors, setValidationErrors] =
     useState<ValidationErrorsType>()
+  const [loading, setLoading] = useState(false)
 
   const handleCreateNewTransaction = async () => {
     try {
-      await newTransactionFormSchema.parse(transaction)
+      setLoading(true)
+
+      newTransactionFormSchema.parse(transaction)
+
+      await createTransaction(transaction)
+
+      closeBottomSheet()
     } catch (error) {
       if (error instanceof ZodError) {
+        // biome-ignore lint/suspicious/noConsole: debug
+        console.log(error)
+
         const errors = {} as ValidationErrorsType
 
         for (const issue of error.issues) {
@@ -45,7 +59,11 @@ export const NewTransactionForm = () => {
         }
 
         setValidationErrors(errors)
+      } else {
+        handleError(error, "Falha ao criar transação.")
       }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -125,18 +143,18 @@ export const NewTransactionForm = () => {
       {/* TYPE OPTIONS */}
       <View className="mt-6 w-full">
         <TransactionTypeSelector
-          typeId={transaction.typedId}
-          setTransactionType={(typeId) => setTransactionData("typedId", typeId)}
+          typeId={transaction.typeId}
+          setTransactionType={(typeId) => setTransactionData("typeId", typeId)}
         />
 
-        {validationErrors?.typedId && (
-          <ErrorMessage>{validationErrors.typedId}</ErrorMessage>
+        {validationErrors?.typeId && (
+          <ErrorMessage>{validationErrors.typeId}</ErrorMessage>
         )}
       </View>
 
       {/* CREATE BUTTON */}
       <Button onPress={handleCreateNewTransaction} className="mt-10">
-        Cadastrar
+        {loading ? <ActivityIndicator color={colors.white} /> : "Cadastrar"}
       </Button>
     </View>
   )

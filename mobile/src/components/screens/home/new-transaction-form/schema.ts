@@ -10,7 +10,7 @@ export const newTransactionFormSchema = z.object({
   categoryId: z
     .number({ error: "A categoria é obrigatória" })
     .min(1, { error: "A categoria é obrigatória" }),
-  typedId: z
+  typeId: z
     .number({ error: "O tipo de transação é obrigatório" })
     .min(1, { error: "O tipo de transação é obrigatório" }),
 })
