@@ -1,7 +1,8 @@
 import { useEffect } from "react"
+import { FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-import { Header } from "@/components/screens/home/header"
+import { ListHeader } from "@/components/screens/home/list-header"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
@@ -25,8 +26,14 @@ export default function Home() {
   }, [])
 
   return (
-    <SafeAreaView className="flex-1 bg-background-primary">
-      <Header />
+    <SafeAreaView className="flex-1 bg-background-secondary">
+      {/*  TRANSACTIONS LIST */}
+      <FlatList
+        data={[1, 2]}
+        keyExtractor={(_, index) => String(index)}
+        renderItem={() => <></>}
+        ListHeaderComponent={<ListHeader />}
+      />
     </SafeAreaView>
   )
 }

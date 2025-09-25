@@ -13,7 +13,7 @@ export const Header = () => {
   const { openBottomSheet } = useBottomSheetContext()
 
   return (
-    <View className="w-full flex-row items-center justify-between gap-2 p-8">
+    <View className="w-full flex-row items-center justify-between gap-2 bg-background-primary p-8">
       <View className="flex-1 gap-2">
         <Image
           source={require("@/assets/logo.png")}
