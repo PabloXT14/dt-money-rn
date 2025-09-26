@@ -1,20 +1,24 @@
 import {
   createContext,
   type PropsWithChildren,
+  useCallback,
   useContext,
   useState,
 } from "react"
 
 import type { ITransactionCategoryResponse } from "@/shared/interfaces/https/transaction-category-response"
 import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
+import type { Transaction } from "@/shared/interfaces/transaction"
 
 // biome-ignore lint/performance/noNamespaceImport: disabled for clarity
 import * as transactionService from "@/shared/services/dt-money/transaction.service"
 
 export type TransactionContextType = {
   categories: ITransactionCategoryResponse[]
+  transactions: Transaction[]
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
+  fetchTransactions: () => Promise<void>
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -25,6 +29,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState<ITransactionCategoryResponse[]>(
     []
   )
+  const [transactions, setTransactions] = useState<Transaction[]>([])
 
   const fetchCategories = async () => {
     const fetchedCategories =
@@ -36,12 +41,26 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     await transactionService.createTransaction(data)
   }
 
+  const fetchTransactions = useCallback(async () => {
+    const transactionResponse = await transactionService.getTransactions({
+      page: 1,
+      perPage: 10,
+    })
+
+    setTransactions(transactionResponse.data)
+  }, [])
+
+  // biome-ignore lint/suspicious/noConsole: debugging
+  console.log(transactions)
+
   return (
     <TransactionContext.Provider
       value={{
         categories,
+        transactions,
         fetchCategories,
         createTransaction,
+        fetchTransactions,
       }}
     >
       {children}

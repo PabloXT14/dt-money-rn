@@ -8,12 +8,13 @@ import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 
 export default function Home() {
-  const { fetchCategories } = useTransactionContext()
+  const { fetchCategories, fetchTransactions } = useTransactionContext()
   const { handleError } = useErrorHandler()
 
   const handleFetchCategories = async () => {
     try {
       await fetchCategories()
+      await fetchTransactions()
     } catch (error) {
       handleError(error)
     }
