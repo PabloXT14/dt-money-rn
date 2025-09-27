@@ -13,8 +13,7 @@ export default function Home() {
 
   const handleFetchCategories = async () => {
     try {
-      await fetchCategories()
-      await fetchTransactions()
+      await Promise.all([fetchCategories(), fetchTransactions()])
     } catch (error) {
       handleError(error)
     }
@@ -27,9 +26,10 @@ export default function Home() {
   }, [])
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary">
+    <SafeAreaView className="flex-1 bg-background-primary">
       {/*  TRANSACTIONS LIST */}
       <FlatList
+        className="bg-background-secondary"
         data={[1, 2]}
         keyExtractor={(_, index) => String(index)}
         renderItem={() => <></>}

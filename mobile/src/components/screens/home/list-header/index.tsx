@@ -1,6 +1,8 @@
-import { ScrollView, Text, View } from "react-native"
+import { ScrollView, View } from "react-native"
 
 import { Header } from "../header"
+import { TransactionCard } from "../transaction-card"
+import { TransactionType } from "@/shared/enums/transaction-type"
 
 export const ListHeader = () => {
   return (
@@ -16,21 +18,11 @@ export const ListHeader = () => {
           showsHorizontalScrollIndicator={false}
           className="absolute h-[141px] pl-8"
         >
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
-          <Text className="text-white">Teste</Text>
+          <TransactionCard type={TransactionType.INCOME} amount={1000} />
+
+          <TransactionCard type={TransactionType.EXPENSE} amount={2000} />
+
+          <TransactionCard type="total" amount={3000} />
         </ScrollView>
       </View>
     </>

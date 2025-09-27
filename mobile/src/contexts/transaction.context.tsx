@@ -50,9 +50,6 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     setTransactions(transactionResponse.data)
   }, [])
 
-  // biome-ignore lint/suspicious/noConsole: debugging
-  console.log(transactions)
-
   return (
     <TransactionContext.Provider
       value={{
