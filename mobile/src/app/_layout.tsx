@@ -2,6 +2,13 @@ import { useEffect, useState } from "react"
 import { Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_600SemiBold,
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto"
 
 import "@/styles/global.css"
 
@@ -32,7 +39,14 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
+  const [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_600SemiBold,
+    Roboto_700Bold,
+  })
   const [loading, setLoading] = useState(true)
+
   const { user, token, restoreUserSession, handleLogout } = useAuthContext()
 
   const isAuthenticated = !!user && !!token
@@ -59,7 +73,7 @@ function RootNavigator() {
     checkUserSession()
   }, [])
 
-  if (loading) {
+  if (loading || !fontsLoaded) {
     return <Loading />
   }
 
