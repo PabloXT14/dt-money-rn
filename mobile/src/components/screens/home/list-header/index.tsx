@@ -21,8 +21,8 @@ export const ListHeader = () => {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="absolute h-[141px] pl-8"
-          contentContainerClassName="gap-4 pr-16"
+          className="absolute h-[141px]"
+          contentContainerClassName="gap-4 px-8"
         >
           <TransactionCard
             type={TransactionType.INCOME}

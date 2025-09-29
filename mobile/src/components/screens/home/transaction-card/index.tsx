@@ -1,63 +1,33 @@
 import { Text, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import clsx from "clsx"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
-import { TransactionType } from "@/shared/enums/transaction-type"
+import type { TransactionType } from "@/shared/enums/transaction-type"
 
-import { colors } from "@/shared/colors"
+import { useTransactionContext } from "@/contexts/transaction.context"
 
-type TransactionCardType = TransactionType | "total"
+import { ICONS } from "./strategies/icon-strategy"
+import { CARD_DATA } from "./strategies/card-data-strategy"
+
+export type TransactionCardType = TransactionType | "total"
 
 type TransactionCardProps = {
   type: TransactionCardType
   amount: number
 }
 
-/* STRATEGY PATTERN */
-
-type IconsData = {
-  name: keyof typeof MaterialIcons.glyphMap
-  color: string
-}
-
-const ICONS: Record<TransactionCardType, IconsData> = {
-  [TransactionType.INCOME]: {
-    name: "arrow-circle-up",
-    color: colors["accent-brand-light"],
-  },
-  [TransactionType.EXPENSE]: {
-    name: "arrow-circle-down",
-    color: colors["accent-red"],
-  },
-  total: {
-    name: "attach-money",
-    color: colors.white,
-  },
-}
-
-type CardDataType = {
-  label: string
-  bgColor: string
-}
-
-const CARD_DATA: Record<TransactionCardType, CardDataType> = {
-  [TransactionType.INCOME]: {
-    label: "Entradas",
-    bgColor: colors["background-tertiary"],
-  },
-  [TransactionType.EXPENSE]: {
-    label: "Saídas",
-    bgColor: colors["background-tertiary"],
-  },
-  total: {
-    label: "Total",
-    bgColor: colors["accent-brand-background-primary"],
-  },
-}
-
 export const TransactionCard = ({ type, amount }: TransactionCardProps) => {
   const iconData = ICONS[type]
   const cardData = CARD_DATA[type]
+
+  const { transactions } = useTransactionContext()
+
+  // OBS: as transações vêm do back-end do mais recente para o mais antigo, sendo assim o primeiro item do array é o mais recente, e em nosso caso checamos também se o type dele é igual ao type do card, e se for então ele é o mais recente daquele tipo
+  const lastTransaction = transactions.find(
+    ({ type: transactionType }) => transactionType.id === type
+  )
 
   return (
     <View
@@ -72,10 +42,22 @@ export const TransactionCard = ({ type, amount }: TransactionCardProps) => {
       </View>
 
       {/* CONTENT */}
-      <View>
+      <View className="gap-1">
         <Text className="font-bold text-2xl text-gray-400">
           R$ {amount.toFixed(2).replace(".", ",")}
         </Text>
+
+        {type !== "total" && (
+          <Text className="text-gray-700 text-sm" numberOfLines={1}>
+            {lastTransaction?.createdAt
+              ? format(
+                  lastTransaction.createdAt,
+                  `'Última ${cardData.label.toLocaleLowerCase().slice(0, -1)} em' d 'de' MMMM'`,
+                  { locale: ptBR }
+                )
+              : "Nenhuma transação encontrada"}
+          </Text>
+        )}
       </View>
     </View>
   )
