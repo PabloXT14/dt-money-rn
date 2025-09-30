@@ -2,7 +2,6 @@ import { Text, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import clsx from "clsx"
 import { format } from "date-fns"
-import { ptBR } from "date-fns/locale"
 
 import type { TransactionType } from "@/shared/enums/transaction-type"
 
@@ -52,8 +51,7 @@ export const TransactionCard = ({ type, amount }: TransactionCardProps) => {
             {lastTransaction?.createdAt
               ? format(
                   lastTransaction.createdAt,
-                  `'Última ${cardData.label.toLocaleLowerCase().slice(0, -1)} em' d 'de' MMMM'`,
-                  { locale: ptBR }
+                  `'Última ${cardData.label.toLocaleLowerCase().slice(0, -1)} em' d 'de' MMMM'`
                 )
               : "Nenhuma transação encontrada"}
           </Text>

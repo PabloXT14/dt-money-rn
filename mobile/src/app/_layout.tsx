@@ -9,6 +9,10 @@ import {
   Roboto_600SemiBold,
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto"
+import { setDefaultOptions } from "date-fns"
+import { ptBR } from "date-fns/locale"
+
+setDefaultOptions({ locale: ptBR })
 
 import "@/styles/global.css"
 
