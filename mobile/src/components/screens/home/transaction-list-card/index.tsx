@@ -9,6 +9,8 @@ import { TransactionType } from "@/shared/enums/transaction-type"
 
 import { colors } from "@/shared/colors"
 
+import { RightAction } from "./right-action"
+
 type TransactionListCardProps = {
   transactionData: Transaction
 }
@@ -20,17 +22,15 @@ export const TransactionListCard = ({
 
   return (
     <Swipeable
-      overshootLeft // para dar o efeito de arrastar para a esquerda (ultrapassar o limite da esquerda de 90% do width)
-      overshootRight // mesmo coisa da esquerda, mas para a direita
-      // friction={2}
-      leftThreshold={30}
-      rightThreshold={30}
       containerStyle={{
         alignItems: "center",
         alignSelf: "center",
         overflow: "visible",
         width: "90%",
       }}
+      renderRightActions={() => <RightAction />}
+      overshootRight={false}
+      // overshootLeft={false}
     >
       <View className="h-[140px] w-full justify-between rounded-md bg-background-tertiary p-6">
         {/* CONTENT */}
