@@ -28,7 +28,9 @@ export const TransactionListCard = ({
         overflow: "visible",
         width: "90%",
       }}
-      renderRightActions={() => <RightAction />}
+      renderRightActions={() => (
+        <RightAction transactionId={transactionData.id} />
+      )}
       overshootRight={false}
       // overshootLeft={false}
     >

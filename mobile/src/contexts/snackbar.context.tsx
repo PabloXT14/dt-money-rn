@@ -10,7 +10,7 @@ export type SnackbarMessageType = "ERROR" | "SUCCESS"
 
 export type NotifyMessageParams = {
   message: string
-  type: SnackbarMessageType
+  messageType: SnackbarMessageType
 }
 
 export type SnackbarContextType = {
@@ -32,9 +32,9 @@ export const SnackbarContextProvider: FC<PropsWithChildren> = ({
   const [type, setType] = useState<SnackbarMessageType | null>(null)
 
   // biome-ignore lint/nursery/noShadow: disabled for clarity
-  const notify = ({ message, type }: NotifyMessageParams) => {
+  const notify = ({ message, messageType }: NotifyMessageParams) => {
     setMessage(message)
-    setType(type)
+    setType(messageType)
 
     setTimeout(() => {
       setMessage(null)

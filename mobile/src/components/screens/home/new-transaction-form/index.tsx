@@ -10,6 +10,7 @@ import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
+import { useSnackbarContext } from "@/contexts/snackbar.context"
 
 import { colors } from "@/shared/colors"
 
@@ -26,6 +27,7 @@ export const NewTransactionForm = () => {
   const { closeBottomSheet } = useBottomSheetContext()
   const { createTransaction } = useTransactionContext()
   const { handleError } = useErrorHandler()
+  const { notify } = useSnackbarContext()
 
   const [transaction, setTransaction] = useState<ICreateTransactionRequest>({
     categoryId: 0,
@@ -44,6 +46,11 @@ export const NewTransactionForm = () => {
       newTransactionFormSchema.parse(transaction)
 
       await createTransaction(transaction)
+
+      notify({
+        message: "Transação criada com sucesso!",
+        messageType: "SUCCESS",
+      })
 
       closeBottomSheet()
     } catch (error) {

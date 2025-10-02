@@ -15,7 +15,7 @@ export const useErrorHandler = () => {
       ? error.message
       : defaultMessage || "Falha ao realizar a requisição."
 
-    notify({ message, type: "ERROR" })
+    notify({ message, messageType: "ERROR" })
   }
 
   return { handleError }
