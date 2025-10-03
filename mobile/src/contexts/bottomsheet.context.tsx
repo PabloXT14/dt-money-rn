@@ -34,9 +34,10 @@ export const BottomSheetContextProvider = ({ children }: PropsWithChildren) => {
 
   const openBottomSheet = useCallback(
     (newContent: ReactNode, newIndex: number) => {
-      setIndex(newIndex)
       setContent(newContent)
       setIsOpen(true)
+      setIndex(newIndex)
+
       requestAnimationFrame(() => {
         bottomSheetRef.current?.snapToIndex(newIndex)
       })

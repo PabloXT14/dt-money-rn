@@ -10,6 +10,7 @@ import { TransactionType } from "@/shared/enums/transaction-type"
 import { colors } from "@/shared/colors"
 
 import { RightAction } from "./right-action"
+import { LeftAction } from "./left-action"
 
 type TransactionListCardProps = {
   transactionData: Transaction
@@ -31,8 +32,11 @@ export const TransactionListCard = ({
       renderRightActions={() => (
         <RightAction transactionId={transactionData.id} />
       )}
+      renderLeftActions={() => (
+        <LeftAction transactionId={transactionData.id} />
+      )}
       overshootRight={false}
-      // overshootLeft={false}
+      overshootLeft={false}
     >
       <View className="h-[140px] w-full justify-between rounded-md bg-background-tertiary p-6">
         {/* CONTENT */}
