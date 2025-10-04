@@ -3,21 +3,29 @@ import { Pressable } from "react-native-gesture-handler"
 import { MaterialIcons } from "@expo/vector-icons"
 
 import { colors } from "@/shared/colors"
+
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 
+import { EditTransactionForm } from "./edit-transaction-form"
+
+import type { Transaction } from "@/shared/interfaces/transaction"
+
 type LeftActionProps = {
-  transactionId: number
+  transaction: Transaction
 }
 
 // Obs: estamos usando o Pressable pois o renderLeftActions do Swipeable no atual momento (10/2025) não está funciona bem com o TouchableOpacity
 
-export const LeftAction = ({ transactionId }: LeftActionProps) => {
+export const LeftAction = ({ transaction }: LeftActionProps) => {
   const { openBottomSheet } = useBottomSheetContext()
 
   return (
     <Pressable
       onPress={() => {
-        openBottomSheet(<View />, 1)
+        openBottomSheet(
+          <EditTransactionForm transactionToUpdate={transaction} />,
+          0
+        )
       }}
     >
       <View className="h-[140px] w-[80px] items-center justify-center rounded-l-md bg-accent-blue-dark">

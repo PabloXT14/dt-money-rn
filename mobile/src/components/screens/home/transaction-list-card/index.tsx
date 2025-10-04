@@ -32,9 +32,7 @@ export const TransactionListCard = ({
       renderRightActions={() => (
         <RightAction transactionId={transactionData.id} />
       )}
-      renderLeftActions={() => (
-        <LeftAction transactionId={transactionData.id} />
-      )}
+      renderLeftActions={() => <LeftAction transaction={transactionData} />}
       overshootRight={false}
       overshootLeft={false}
     >

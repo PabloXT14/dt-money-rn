@@ -8,6 +8,7 @@ import {
 
 import type { ITransactionCategoryResponse } from "@/shared/interfaces/https/transaction-category-response"
 import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create-transaction-request"
+import type { IUpdateTransactionRequest } from "@/shared/interfaces/https/update-transaction-request"
 import type { Transaction } from "@/shared/interfaces/transaction"
 import type { TotalTransactions } from "@/shared/interfaces/total-transactions"
 
@@ -21,6 +22,7 @@ export type TransactionContextType = {
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
   fetchTransactions: () => Promise<void>
+  updateTransaction: (data: IUpdateTransactionRequest) => Promise<void>
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -61,6 +63,10 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     setTotalTransactions(transactionResponse.totalTransactions)
   }, [])
 
+  const updateTransaction = async (data: IUpdateTransactionRequest) => {
+    await transactionService.updateTransaction(data)
+  }
+
   return (
     <TransactionContext.Provider
       value={{
@@ -70,6 +76,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         fetchCategories,
         createTransaction,
         fetchTransactions,
+        updateTransaction,
       }}
     >
       {children}
