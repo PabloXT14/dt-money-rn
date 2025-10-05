@@ -10,6 +10,8 @@ import { useTransactionContext } from "@/contexts/transaction.context"
 import { ICONS } from "./strategies/icon-strategy"
 import { CARD_DATA } from "./strategies/card-data-strategy"
 
+import { moneyMapper } from "@/shared/utils/money-mapper"
+
 export type TransactionCardType = TransactionType | "total"
 
 type TransactionCardProps = {
@@ -43,7 +45,8 @@ export const TransactionCard = ({ type, amount }: TransactionCardProps) => {
       {/* CONTENT */}
       <View className="gap-1">
         <Text className="font-bold text-2xl text-gray-400">
-          R$ {amount.toFixed(2).replace(".", ",")}
+          {/* R$ {amount.toFixed(2).replace(".", ",")} */}
+          {moneyMapper(amount)}
         </Text>
 
         {type !== "total" && (

@@ -12,6 +12,8 @@ import { colors } from "@/shared/colors"
 import { RightAction } from "./right-action"
 import { LeftAction } from "./left-action"
 
+import { moneyMapper } from "@/shared/utils/money-mapper"
+
 type TransactionListCardProps = {
   transactionData: Transaction
 }
@@ -50,8 +52,7 @@ export const TransactionListCard = ({
               isExpense && "text-accent-red"
             )}
           >
-            {isExpense && "-"} R${" "}
-            {transactionData.value.toFixed(2).replace(".", ",")}
+            {isExpense && "-"} {moneyMapper(transactionData.value)}
           </Text>
         </View>
 
