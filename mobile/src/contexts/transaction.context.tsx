@@ -19,10 +19,12 @@ export type TransactionContextType = {
   categories: ITransactionCategoryResponse[]
   transactions: Transaction[]
   totalTransactions: TotalTransactions
+  isLoading: boolean
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
   fetchTransactions: () => Promise<void>
   updateTransaction: (data: IUpdateTransactionRequest) => Promise<void>
+  refreshTransactions: () => Promise<void>
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -43,14 +45,26 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     }
   )
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const refreshTransactions = async () => {
+    setIsLoading(true)
+
+    const transactionResponse = await transactionService.getTransactions({
+      page: 1,
+      perPage: 10,
+    })
+
+    setTransactions(transactionResponse.data)
+    setTotalTransactions(transactionResponse.totalTransactions)
+
+    setIsLoading(false)
+  }
+
   const fetchCategories = async () => {
     const fetchedCategories =
       await transactionService.getTransactionCategories()
     setCategories(fetchedCategories)
-  }
-
-  const createTransaction = async (data: ICreateTransactionRequest) => {
-    await transactionService.createTransaction(data)
   }
 
   const fetchTransactions = useCallback(async () => {
@@ -63,9 +77,18 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     setTotalTransactions(transactionResponse.totalTransactions)
   }, [])
 
+    const createTransaction = async (data: ICreateTransactionRequest) => {
+    await transactionService.createTransaction(data)
+
+    await refreshTransactions()
+  }
+
   const updateTransaction = async (data: IUpdateTransactionRequest) => {
     await transactionService.updateTransaction(data)
+
+    await refreshTransactions()
   }
+
 
   return (
     <TransactionContext.Provider
@@ -73,10 +96,12 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         categories,
         transactions,
         totalTransactions,
+        isLoading,
         fetchCategories,
         createTransaction,
         fetchTransactions,
         updateTransaction,
+        refreshTransactions,
       }}
     >
       {children}
