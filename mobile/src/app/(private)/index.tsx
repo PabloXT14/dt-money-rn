@@ -3,19 +3,24 @@ import { FlatList, RefreshControl } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import { ListHeader } from "@/components/screens/home/list-header"
+import { TransactionListCard } from "@/components/screens/home/transaction-list-card"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
-import { TransactionListCard } from "@/components/screens/home/transaction-list-card"
 
 export default function Home() {
-  const { transactions, fetchCategories, fetchTransactions, refreshTransactions, isLoading } =
-    useTransactionContext()
+  const {
+    transactions,
+    fetchCategories,
+    fetchTransactions,
+    refreshTransactions,
+    isLoading,
+  } = useTransactionContext()
   const { handleError } = useErrorHandler()
 
   const handleFetchCategories = async () => {
     try {
-      await Promise.all([fetchCategories(), fetchTransactions()])
+      await Promise.all([fetchCategories(), fetchTransactions({ page: 1 })])
     } catch (error) {
       handleError(error)
     }
@@ -39,7 +44,12 @@ export default function Home() {
         )}
         contentContainerStyle={{ gap: 16 }}
         ListHeaderComponent={<ListHeader />}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refreshTransactions} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={refreshTransactions}
+          />
+        }
       />
     </SafeAreaView>
   )
