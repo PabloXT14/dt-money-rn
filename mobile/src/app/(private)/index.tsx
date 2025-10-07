@@ -11,10 +11,11 @@ import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 export default function Home() {
   const {
     transactions,
+    isLoading,
     fetchCategories,
     fetchTransactions,
     refreshTransactions,
-    isLoading,
+    loadMoreTransactions,
   } = useTransactionContext()
   const { handleError } = useErrorHandler()
 
@@ -42,7 +43,7 @@ export default function Home() {
         renderItem={({ item }) => (
           <TransactionListCard transactionData={item} />
         )}
-        contentContainerStyle={{ gap: 16 }}
+        contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
         ListHeaderComponent={<ListHeader />}
         refreshControl={
           <RefreshControl
@@ -50,6 +51,8 @@ export default function Home() {
             onRefresh={refreshTransactions}
           />
         }
+        onEndReached={loadMoreTransactions}
+        onEndReachedThreshold={0.5} // Distance from the bottom to trigger the onEndReached event (0.5 = 50% of the screen)
       />
     </SafeAreaView>
   )

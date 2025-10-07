@@ -3,7 +3,8 @@
 export interface IPagination {
   page: number
   perPage: number
-  totalRows?: number
+  totalRows: number
+  totalPages: number
 }
 
 export interface IGetTransactionsRequest {
