@@ -37,6 +37,8 @@ export const TransactionContext = createContext<TransactionContextType>(
   {} as TransactionContextType
 )
 
+const AMOUNT_OF_TRANSACTIONS_PER_PAGE = 10
+
 export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState<ITransactionCategoryResponse[]>(
     []
@@ -53,12 +55,12 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
 
   const [pagination, setPagination] = useState<IPagination>({
     page: 1,
-    perPage: 4,
+    perPage: AMOUNT_OF_TRANSACTIONS_PER_PAGE,
     totalRows: 0,
     totalPages: 0,
   })
 
-  const refreshTransactions = async () => {
+  const refreshTransactions = useCallback(async () => {
     const { page, perPage } = pagination
 
     setIsLoading(true)
@@ -78,7 +80,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     })
 
     setIsLoading(false)
-  }
+  }, [pagination])
 
   const fetchCategories = async () => {
     const fetchedCategories =

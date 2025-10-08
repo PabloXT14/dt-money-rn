@@ -21,15 +21,42 @@ export default function Home() {
 
   const handleFetchCategories = async () => {
     try {
-      await Promise.all([fetchCategories(), fetchTransactions({ page: 1 })])
+      await fetchCategories()
     } catch (error) {
-      handleError(error)
+      handleError(error, "Falha ao buscar categorias.")
+    }
+  }
+
+  const handleFetchInitialTransactions = async () => {
+    try {
+      await fetchTransactions({ page: 1 })
+    } catch (error) {
+      handleError(error, "Falha ao buscar transações.")
+    }
+  }
+
+  const handleLoadMoreTransactions = async () => {
+    try {
+      await loadMoreTransactions()
+    } catch (error) {
+      handleError(error, "Falha ao carregar novas transações.")
+    }
+  }
+
+  const handleRefreshTransactions = async () => {
+    try {
+      await refreshTransactions()
+    } catch (error) {
+      handleError(error, "Falha ao recarregar as transações.")
     }
   }
 
   useEffect(() => {
     ;(async () => {
-      await handleFetchCategories()
+      await Promise.all([
+        handleFetchCategories(),
+        handleFetchInitialTransactions(),
+      ])
     })()
   }, [])
 
@@ -48,10 +75,10 @@ export default function Home() {
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
-            onRefresh={refreshTransactions}
+            onRefresh={handleRefreshTransactions}
           />
         }
-        onEndReached={loadMoreTransactions}
+        onEndReached={handleLoadMoreTransactions}
         onEndReachedThreshold={0.5} // Distance from the bottom to trigger the onEndReached event (0.5 = 50% of the screen)
       />
     </SafeAreaView>
