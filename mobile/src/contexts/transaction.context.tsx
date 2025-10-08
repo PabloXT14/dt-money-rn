@@ -59,15 +59,23 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   })
 
   const refreshTransactions = async () => {
+    const { page, perPage } = pagination
+
     setIsLoading(true)
 
     const transactionResponse = await transactionService.getTransactions({
       page: 1,
-      perPage: 10,
+      perPage: page * perPage, // Assim ele pega todas as transações que já foram carregadas até o momento
     })
 
     setTransactions(transactionResponse.data)
     setTotalTransactions(transactionResponse.totalTransactions)
+    setPagination({
+      ...pagination,
+      page,
+      totalRows: transactionResponse.totalRows,
+      totalPages: transactionResponse.totalPages,
+    })
 
     setIsLoading(false)
   }
