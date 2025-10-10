@@ -7,6 +7,7 @@ import { TransactionListCard } from "@/components/screens/home/transaction-list-
 
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
+import { EmptyList } from "@/components/shared/empty-list"
 
 export default function Home() {
   const {
@@ -87,7 +88,10 @@ export default function Home() {
         renderItem={({ item }) => (
           <TransactionListCard transactionData={item} />
         )}
-        contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
+        contentContainerStyle={{
+          gap: 16,
+          paddingBottom: 32,
+        }}
         ListHeaderComponent={<ListHeader />}
         refreshControl={
           <RefreshControl
@@ -97,6 +101,11 @@ export default function Home() {
         }
         onEndReached={handleLoadMoreTransactions}
         onEndReachedThreshold={0.5} // Distance from the bottom to trigger the onEndReached event (0.5 = 50% of the screen)
+        ListEmptyComponent={
+          loadings.initial ? null : (
+            <EmptyList message="Nenhuma transação encontrada." />
+          )
+        }
       />
     </SafeAreaView>
   )

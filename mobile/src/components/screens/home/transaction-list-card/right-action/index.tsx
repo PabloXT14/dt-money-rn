@@ -11,6 +11,7 @@ import { DeleteModal } from "./delete-modal"
 
 import { useSnackbarContext } from "@/contexts/snackbar.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
+import { useTransactionContext } from "@/contexts/transaction.context"
 
 type RightActionProps = {
   transactionId: number
@@ -22,6 +23,7 @@ export const RightAction = ({ transactionId }: RightActionProps) => {
 
   const { notify } = useSnackbarContext()
   const { handleError } = useErrorHandler()
+  const { refreshTransactions } = useTransactionContext()
 
   const handleDeleteTransaction = async () => {
     try {
@@ -34,6 +36,8 @@ export const RightAction = ({ transactionId }: RightActionProps) => {
         messageType: "SUCCESS",
       })
       hideModal()
+
+      await refreshTransactions()
     } catch (error) {
       handleError(error, "Falha ao deletar transação.")
     } finally {
