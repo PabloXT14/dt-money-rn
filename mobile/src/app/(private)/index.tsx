@@ -1,18 +1,21 @@
 import { useEffect } from "react"
-import { FlatList, RefreshControl } from "react-native"
+import { ActivityIndicator, FlatList, RefreshControl } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import { ListHeader } from "@/components/screens/home/list-header"
 import { TransactionListCard } from "@/components/screens/home/transaction-list-card"
+import { EmptyList } from "@/components/shared/empty-list"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
-import { EmptyList } from "@/components/shared/empty-list"
+
+import { colors } from "@/shared/colors"
 
 export default function Home() {
   const {
     transactions,
     loadings,
+    pagination,
     fetchCategories,
     fetchTransactions,
     refreshTransactions,
@@ -48,6 +51,8 @@ export default function Home() {
   const handleLoadMoreTransactions = async () => {
     try {
       handleLoadings({ key: "loadMore", value: true })
+
+      // await new Promise((resolve) => setTimeout(resolve, 2000)) // para simular um delay no carregamento de novas transações
 
       await loadMoreTransactions()
     } catch (error) {
@@ -89,19 +94,32 @@ export default function Home() {
           <TransactionListCard transactionData={item} />
         )}
         contentContainerStyle={{
+          flexGrow: 1,
           gap: 16,
-          paddingBottom: 32,
+          paddingBottom: 80,
         }}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={<ListHeader />}
+        onEndReachedThreshold={0.2} // Distance from the bottom to trigger the onEndReached event (0.2 = 20% of the screen)
+        onEndReached={() => {
+          if (loadings.loadMore || pagination.page >= pagination.totalPages) {
+            return
+          }
+
+          handleLoadMoreTransactions()
+        }}
+        ListFooterComponent={() =>
+          loadings.loadMore ? (
+            <ActivityIndicator color={colors["accent-brand-light"]} />
+          ) : null
+        }
         refreshControl={
           <RefreshControl
             refreshing={loadings.refresh}
             onRefresh={handleRefreshTransactions}
           />
         }
-        onEndReached={handleLoadMoreTransactions}
-        onEndReachedThreshold={0.5} // Distance from the bottom to trigger the onEndReached event (0.5 = 50% of the screen)
-        ListEmptyComponent={
+        ListEmptyComponent={() =>
           loadings.initial ? null : (
             <EmptyList message="Nenhuma transação encontrada." />
           )

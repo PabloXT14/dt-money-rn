@@ -36,6 +36,7 @@ export type TransactionContextType = {
   transactions: Transaction[]
   totalTransactions: TotalTransactions
   loadings: Loadings
+  pagination: IPagination
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
   fetchTransactions: (params: FetchTransactionsParams) => Promise<void>
@@ -49,7 +50,7 @@ export const TransactionContext = createContext<TransactionContextType>(
   {} as TransactionContextType
 )
 
-const AMOUNT_OF_TRANSACTIONS_PER_PAGE = 10
+const AMOUNT_OF_TRANSACTIONS_PER_PAGE = 4
 
 export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState<ITransactionCategoryResponse[]>(
@@ -159,6 +160,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         transactions,
         totalTransactions,
         loadings,
+        pagination,
         fetchCategories,
         createTransaction,
         fetchTransactions,
