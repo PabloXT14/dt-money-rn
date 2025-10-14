@@ -50,7 +50,7 @@ export const TransactionContext = createContext<TransactionContextType>(
   {} as TransactionContextType
 )
 
-const AMOUNT_OF_TRANSACTIONS_PER_PAGE = 4
+const AMOUNT_OF_TRANSACTIONS_PER_PAGE = 10
 
 export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState<ITransactionCategoryResponse[]>(

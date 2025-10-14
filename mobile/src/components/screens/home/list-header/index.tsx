@@ -6,6 +6,7 @@ import { TransactionCard } from "../transaction-card"
 import { TransactionType } from "@/shared/enums/transaction-type"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
+import { FilterInput } from "./filter-input"
 
 export const ListHeader = () => {
   const { totalTransactions } = useTransactionContext()
@@ -37,6 +38,8 @@ export const ListHeader = () => {
           <TransactionCard type="total" amount={totalTransactions.total} />
         </ScrollView>
       </View>
+
+      <FilterInput />
     </>
   )
 }
