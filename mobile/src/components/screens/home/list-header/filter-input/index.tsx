@@ -1,12 +1,40 @@
+import { useEffect, useState } from "react"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
+import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 
 import { colors } from "@/shared/colors"
 
+const SEARCH_DEBOUNCE_DELAY_MS = 500
+
 export const FilterInput = () => {
-  const { pagination } = useTransactionContext()
+  const { pagination, searchText, setSearchText, fetchTransactions } =
+    useTransactionContext()
+  const { handleError } = useErrorHandler()
+
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearchText(text)
+    }, SEARCH_DEBOUNCE_DELAY_MS)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [text])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        await fetchTransactions({ page: 1 })
+      } catch (error) {
+        handleError(error, "Falha ao buscar transações.")
+      }
+    })()
+  }, [searchText])
 
   return (
     <View className="mt-8 px-8">
@@ -25,6 +53,8 @@ export const FilterInput = () => {
           className="h-[50px] flex-1 pl-4 text-base text-white"
           placeholderTextColor={colors.gray[700]}
           placeholder="Busque uma transação"
+          value={text}
+          onChangeText={setText}
         />
 
         <TouchableOpacity className="" activeOpacity={0.8}>

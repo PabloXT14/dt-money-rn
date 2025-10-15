@@ -37,6 +37,7 @@ export type TransactionContextType = {
   totalTransactions: TotalTransactions
   loadings: Loadings
   pagination: IPagination
+  searchText: string
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
   fetchTransactions: (params: FetchTransactionsParams) => Promise<void>
@@ -44,6 +45,7 @@ export type TransactionContextType = {
   refreshTransactions: () => Promise<void>
   loadMoreTransactions: () => Promise<void>
   handleLoadings: (params: HandleLoadingsParams) => void
+  setSearchText: (text: string) => void
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -78,6 +80,8 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     totalPages: 0,
   })
 
+  const [searchText, setSearchText] = useState("")
+
   const handleLoadings = ({ key, value }: HandleLoadingsParams) => {
     setLoadings((prevState) => ({ ...prevState, [key]: value }))
   }
@@ -111,6 +115,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
       const transactionResponse = await transactionService.getTransactions({
         page,
         perPage: pagination.perPage,
+        searchText,
       })
 
       if (page === 1) {
@@ -130,7 +135,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         totalPages: transactionResponse.totalPages,
       })
     },
-    [pagination]
+    [pagination, searchText]
   )
 
   const createTransaction = async (data: ICreateTransactionRequest) => {
@@ -161,6 +166,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         totalTransactions,
         loadings,
         pagination,
+        searchText,
         fetchCategories,
         createTransaction,
         fetchTransactions,
@@ -168,6 +174,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         refreshTransactions,
         loadMoreTransactions,
         handleLoadings,
+        setSearchText,
       }}
     >
       {children}
