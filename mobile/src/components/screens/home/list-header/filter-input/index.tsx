@@ -4,8 +4,10 @@ import { MaterialIcons } from "@expo/vector-icons"
 
 import { useTransactionContext } from "@/contexts/transaction.context"
 import { useErrorHandler } from "@/shared/hooks/user-error-handler"
+import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
 
 import { colors } from "@/shared/colors"
+import { TransactionsFilters } from "./transactions-filters"
 
 const SEARCH_DEBOUNCE_DELAY_MS = 500
 
@@ -13,6 +15,7 @@ export const FilterInput = () => {
   const { pagination, searchText, setSearchText, fetchTransactions } =
     useTransactionContext()
   const { handleError } = useErrorHandler()
+  const { openBottomSheet } = useBottomSheetContext()
 
   const [text, setText] = useState("")
 
@@ -57,7 +60,11 @@ export const FilterInput = () => {
           onChangeText={setText}
         />
 
-        <TouchableOpacity className="" activeOpacity={0.8}>
+        <TouchableOpacity
+          className=""
+          activeOpacity={0.8}
+          onPress={() => openBottomSheet(<TransactionsFilters />, 1)}
+        >
           <MaterialIcons
             name="filter-list"
             size={24}
