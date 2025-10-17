@@ -16,3 +16,10 @@ export interface IGetTransactionsRequest {
   categoryIds?: number[]
   searchText?: string
 }
+
+export interface IFilters {
+  from?: Date
+  to?: Date
+  typeId?: number
+  categoryIds?: Record<number, boolean>
+}

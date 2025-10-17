@@ -11,7 +11,10 @@ import type { ICreateTransactionRequest } from "@/shared/interfaces/https/create
 import type { IUpdateTransactionRequest } from "@/shared/interfaces/https/update-transaction-request"
 import type { Transaction } from "@/shared/interfaces/transaction"
 import type { TotalTransactions } from "@/shared/interfaces/total-transactions"
-import type { IPagination } from "@/shared/interfaces/https/get-transactions-request"
+import type {
+  IFilters,
+  IPagination,
+} from "@/shared/interfaces/https/get-transactions-request"
 
 // biome-ignore lint/performance/noNamespaceImport: disabled for clarity
 import * as transactionService from "@/shared/services/dt-money/transaction.service"
@@ -31,6 +34,11 @@ type HandleLoadingsParams = {
   value: boolean
 }
 
+type HandleFiltersParams = {
+  key: keyof IFilters
+  value: IFilters[keyof IFilters]
+}
+
 export type TransactionContextType = {
   categories: ITransactionCategoryResponse[]
   transactions: Transaction[]
@@ -38,6 +46,7 @@ export type TransactionContextType = {
   loadings: Loadings
   pagination: IPagination
   searchText: string
+  filters: IFilters
   fetchCategories: () => Promise<void>
   createTransaction: (data: ICreateTransactionRequest) => Promise<void>
   fetchTransactions: (params: FetchTransactionsParams) => Promise<void>
@@ -46,6 +55,7 @@ export type TransactionContextType = {
   loadMoreTransactions: () => Promise<void>
   handleLoadings: (params: HandleLoadingsParams) => void
   setSearchText: (text: string) => void
+  handleFilters: (params: HandleFiltersParams) => void
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -81,6 +91,13 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   })
 
   const [searchText, setSearchText] = useState("")
+
+  const [filters, setFilters] = useState<IFilters>({
+    from: undefined,
+    to: undefined,
+    typeId: undefined,
+    categoryIds: {},
+  })
 
   const handleLoadings = ({ key, value }: HandleLoadingsParams) => {
     setLoadings((prevState) => ({ ...prevState, [key]: value }))
@@ -158,6 +175,10 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     await fetchTransactions({ page: pagination.page + 1 })
   }, [loadings.loadMore, pagination])
 
+  const handleFilters = ({ key, value }: HandleFiltersParams) => {
+    setFilters((prevState) => ({ ...prevState, [key]: value }))
+  }
+
   return (
     <TransactionContext.Provider
       value={{
@@ -167,6 +188,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         loadings,
         pagination,
         searchText,
+        filters,
         fetchCategories,
         createTransaction,
         fetchTransactions,
@@ -175,6 +197,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         loadMoreTransactions,
         handleLoadings,
         setSearchText,
+        handleFilters,
       }}
     >
       {children}

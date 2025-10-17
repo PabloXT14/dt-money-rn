@@ -5,13 +5,13 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker"
 import { format } from "date-fns"
 import clsx from "clsx"
+import { useTransactionContext } from "@/contexts/transaction.context"
 
 export const DateFilter = () => {
   const [showStartDatePicker, setShowStartDatePicker] = useState(false)
   const [showEndDatePicker, setShowEndDatePicker] = useState(false)
 
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
+  const { filters, handleFilters } = useTransactionContext()
 
   const onChangeStartDatePicker = (
     event: DateTimePickerEvent,
@@ -20,7 +20,7 @@ export const DateFilter = () => {
     setShowStartDatePicker(false)
 
     if (event.type === "set" && selectedDate) {
-      setStartDate(selectedDate)
+      handleFilters({ key: "from", value: selectedDate })
     }
   }
 
@@ -31,7 +31,7 @@ export const DateFilter = () => {
     setShowEndDatePicker(false)
 
     if (event.type === "set" && selectedDate) {
-      setEndDate(selectedDate)
+      handleFilters({ key: "to", value: selectedDate })
     }
   }
 
@@ -50,16 +50,16 @@ export const DateFilter = () => {
             <Text
               className={clsx(
                 "text-base",
-                startDate ? "text-white" : "text-gray-700"
+                filters.from ? "text-white" : "text-gray-700"
               )}
             >
-              {startDate ? format(startDate, "dd/MM/yyyy") : "De"}
+              {filters.from ? format(filters.from, "dd/MM/yyyy") : "De"}
             </Text>
           </TouchableOpacity>
 
           {showStartDatePicker && (
             <DateTimePicker
-              value={startDate || new Date()}
+              value={filters.from || new Date()}
               mode="date"
               display="default"
               onChange={onChangeStartDatePicker}
@@ -77,16 +77,16 @@ export const DateFilter = () => {
             <Text
               className={clsx(
                 "text-base",
-                endDate ? "text-white" : "text-gray-700"
+                filters.to ? "text-white" : "text-gray-700"
               )}
             >
-              {endDate ? format(endDate, "dd/MM/yyyy") : "Até"}
+              {filters.to ? format(filters.to, "dd/MM/yyyy") : "Até"}
             </Text>
           </TouchableOpacity>
 
           {showEndDatePicker && (
             <DateTimePicker
-              value={endDate || new Date()}
+              value={filters.to || new Date()}
               mode="date"
               display="default"
               onChange={onChangeEndDatePicker}
