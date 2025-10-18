@@ -86,6 +86,10 @@ export const SelectCategoryModal = ({
                           ? colors["accent-brand"]
                           : colors.gray[700]
                       }
+                      style={{
+                        borderRadius: 4,
+                        borderWidth: 1,
+                      }}
                     />
 
                     <Text className="text-base text-white">{item.name}</Text>

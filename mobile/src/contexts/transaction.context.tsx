@@ -56,6 +56,7 @@ export type TransactionContextType = {
   handleLoadings: (params: HandleLoadingsParams) => void
   setSearchText: (text: string) => void
   handleFilters: (params: HandleFiltersParams) => void
+  handleCategoryFilter: (categoryId: number) => void
 }
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -179,6 +180,16 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     setFilters((prevState) => ({ ...prevState, [key]: value }))
   }
 
+  const handleCategoryFilter = (categoryId: number) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      categoryIds: {
+        ...prevState.categoryIds,
+        [categoryId]: !prevState.categoryIds?.[categoryId],
+      },
+    }))
+  }
+
   return (
     <TransactionContext.Provider
       value={{
@@ -198,6 +209,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         handleLoadings,
         setSearchText,
         handleFilters,
+        handleCategoryFilter,
       }}
     >
       {children}
