@@ -13,7 +13,7 @@ export const CategoryFilter = () => {
       <Text className="font-bold text-gray-700 text-sm">Categoria</Text>
 
       {/* CATEGORY FILTERS */}
-      <View className="gap-3">
+      <View>
         {categories.map((category) => (
           <TouchableOpacity
             key={`category-filter-${category.id}`}
