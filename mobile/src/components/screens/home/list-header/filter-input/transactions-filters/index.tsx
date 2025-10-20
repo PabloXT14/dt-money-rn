@@ -2,15 +2,47 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context"
+import { useTransactionContext } from "@/contexts/transaction.context"
+import { useErrorHandler } from "@/shared/hooks/user-error-handler"
 
 import { colors } from "@/shared/colors"
 
 import { DateFilter } from "./date-filter"
 import { CategoryFilter } from "./category-filter"
 import { TypeFilter } from "./type-filter"
+import { Button } from "@/components/shared/button"
 
 export const TransactionsFilters = () => {
   const { closeBottomSheet } = useBottomSheetContext()
+  const { fetchTransactions, handleLoadings, resetFilters } =
+    useTransactionContext()
+  const { handleError } = useErrorHandler()
+
+  const handleApplyFilters = async () => {
+    try {
+      handleLoadings({ key: "refresh", value: true })
+
+      await fetchTransactions({ page: 1 })
+    } catch (error) {
+      handleError(error, "Falha aplicar os filtros.")
+    } finally {
+      handleLoadings({ key: "refresh", value: false })
+      closeBottomSheet()
+    }
+  }
+
+  const handleResetFilters = async () => {
+    try {
+      handleLoadings({ key: "refresh", value: true })
+
+      await resetFilters()
+    } catch (error) {
+      handleError(error, "Falha ao limpar os filtros.")
+    } finally {
+      handleLoadings({ key: "refresh", value: false })
+      closeBottomSheet()
+    }
+  }
 
   return (
     <View className="flex-1 p-6">
@@ -29,7 +61,7 @@ export const TransactionsFilters = () => {
       </View>
 
       {/* FILTERS */}
-      <View className="mb-16 gap-6">
+      <View className="mb-12 gap-6">
         {/* DATE */}
         <DateFilter />
 
@@ -41,22 +73,23 @@ export const TransactionsFilters = () => {
       </View>
 
       {/* ACTIONS */}
-      <View className="w-full flex-row gap-3">
-        <TouchableOpacity
-          className="h-[40px] flex-1 items-center justify-center rounded-lg border border-accent-brand bg-transparent"
-          activeOpacity={0.8}
+      <View className="w-full flex-row gap-4">
+        <Button
+          mode="outline"
+          className="flex-1"
+          widthFull={false}
+          onPress={handleResetFilters}
         >
-          <Text className="font-medium text-accent-brand text-sm">
-            Limpar filtros
-          </Text>
-        </TouchableOpacity>
+          Limpar filtros
+        </Button>
 
-        <TouchableOpacity
-          className="h-[40px] flex-1 items-center justify-center rounded-lg bg-accent-brand"
-          activeOpacity={0.8}
+        <Button
+          onPress={handleApplyFilters}
+          className="flex-1"
+          widthFull={false}
         >
-          <Text className="font-medium text-sm text-white">Filtrar</Text>
-        </TouchableOpacity>
+          Filtrar
+        </Button>
       </View>
     </View>
   )
