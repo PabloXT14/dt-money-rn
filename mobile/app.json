@@ -5,22 +5,22 @@
     "scheme": "dt-money-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#202024"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pabloxt14.dtmoneyapp"
+      "bundleIdentifier": "com.pabloxt14.dtmoneyapp",
+      "icon": "./assets/ios-icon.png"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#202024"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.pabloxt14.dtmoneyapp"
@@ -29,9 +29,6 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ]
+    "plugins": ["expo-router", "expo-font"]
   }
 }
